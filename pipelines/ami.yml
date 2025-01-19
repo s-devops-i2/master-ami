@@ -7,7 +7,7 @@ pipelines:
   display_order: -1
   materials:
     git-3caedef:
-      git: https://github.com/s-devops-i2/expense-terraform.git
+      git: https://github.com/s-devops-i2/master-ami.git
       shallow_clone: false
       auto_update: true
       branch: main
