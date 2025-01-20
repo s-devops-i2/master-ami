@@ -14,7 +14,7 @@ pipelines:
   secure_variables:
     TF_VAR_vault_token: AES:Sm/GySenrKRWu0QDKWH/IQ==:2QCFewXX/NGtNjBc5zY6ZaB/cT+pIGPOVjobBcXIveQ=
   stages:
-    - DEV:
+    - CREATE:
         environment_variables:
           env: dev
         fetch_materials: true
@@ -30,5 +30,21 @@ pipelines:
               - exec: {command: terraform, arguments: ["init"],run_if: passed}
               - exec: {command: terraform, arguments: ["apply", "-auto-approve" ],run_if: passed}
 
+    - DELETE:
+        environment_variables:
+          env: dev
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: manual
+          allow_only_on_success: false
+        jobs:
+          terraform-apply:
+            timeout: 0
+            tasks:
+              - exec: { command: terraform, arguments: [ "init" ],run_if: passed }
+              - exec: { command: terraform, arguments: [ "state", "rm","aws_ami_from_instance.ami"],run_if: passed }
+              - exec: { command: terraform, arguments: [ "apply", "-auto-approve" ],run_if: passed }
 
 
